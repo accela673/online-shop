@@ -12,6 +12,11 @@ export class ProductsService {
         private readonly productsRepo: Repository<ProductsEntity>
     ){}
 
+    async getProduct(id: number){
+        return await this.productsRepo.findOne({where:{id:id}})
+    }
+
+
     async getProducts(){
         return await this.productsRepo.find()
     }

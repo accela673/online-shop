@@ -2,20 +2,30 @@ import { UpdateProduct } from './dto/update.product.dto';
 import { CreateProduct } from './dto/create.product.dto';
 import { ProductsService } from './products.service';
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+
+@ApiTags("Products")
 @Controller('products')
 export class ProductsController {
     constructor (private readonly productsService: ProductsService){}
 
+    @ApiOperation({description: "This endpoint to get one product from shop"})
+    @Get('/get/:id')
+    async getOne(@Param('id') id: string){
+      return await this.productsService.getProduct(+id)
+    }
+
+
+    @ApiOperation({description: "This endpoint to get all products from shop"})
     @Get('/getall')
     async getAll(){
         return await this.productsService.getProducts()
     }
 
-
+    @ApiOperation({description: "This endpoint to adding product to shop"})
     @ApiConsumes('multipart/form-data')
     @ApiBody({
       schema: {
@@ -42,11 +52,13 @@ export class ProductsController {
         return await this.productsService.addProduct(product)
     }
 
+    @ApiOperation({description: "This endpoint to deleting product from shop"})
     @Delete('/delete/:id')
     async deleteOne(@Param('id') id: string){
         return this.productsService.deleteProduct(+id)
     }
 
+    @ApiOperation({description: "This endpoint to editing product in shop"})
     @ApiConsumes('multipart/form-data')
     @ApiBody({
       schema: {
