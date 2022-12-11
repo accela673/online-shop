@@ -38,7 +38,7 @@ export class ProductsController {
         product.product_image = file.path
         product.product_name = body.product_name
         product.price = +body.price
-        if(!product.price || !product.product_name) throw new BadRequestException('Price and product name cannot be empty')
+        if(!product.price || !product.product_name.length) throw new BadRequestException('Price and product name cannot be empty')
         return await this.productsService.addProduct(product)
     }
 
@@ -70,9 +70,8 @@ export class ProductsController {
         if(!file) file = {}
         product.product_image = file.path
         product.product_name = body.product_name
-        product.price = body.price
-        console.log(product);
-        
+        product.price = body.price      
+        if(!product.price || !product.product_name.length) throw new BadRequestException('Price and product name cannot be empty')  
         return await this.productsService.editProduct(+id ,product)
     }
 
